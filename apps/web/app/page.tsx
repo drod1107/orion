@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image, { type ImageProps } from "next/image";
 import styles from "./page.module.css";
-
+import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
 
 type Props = Omit<ImageProps, "src"> & {
   srcLight: string;
@@ -12,7 +12,6 @@ type Props = Omit<ImageProps, "src"> & {
 
 const apiUrl = process.env.NEXT_PUBLIC_DEV_API_URL;
 if (!apiUrl) throw new Error("API URL is not set in env vars");
-
 
 const ThemeImage = (props: Props) => {
   const { srcLight, srcDark, ...rest } = props;
@@ -39,27 +38,21 @@ export default function Home() {
       setApiMsg(data.message);
     } catch (error) {
       console.error("Error fetching API message:", error);
+      setApiMsg("Failed to fetch API message.");
     }
   };
-
-  useEffect(() => {
-    fetchApiMessage();
-  }, []);
 
   // Button component that triggers fetchApiMessage
   const FetchButton = ({
     className,
     children
   }: {
-    appName: string;
     className?: string;
     children: React.ReactNode;
   }) => (
     <button
       className={className}
-      onClick={() => {
-        fetchApiMessage();
-      }}
+      onClick={fetchApiMessage}
     >
       {children}
     </button>
@@ -85,10 +78,25 @@ export default function Home() {
           height={38}
           priority
         />
-        <ApiResponse />
+        <SignedIn>
+          <div style={{ marginBottom: 16 }}>
+            <UserButton />
+          </div>
+          <FetchButton className={styles.button}>Fetch API Message</FetchButton>
+          <ApiResponse />
+        </SignedIn>
+        <SignedOut>
+          <div style={{ display: "flex", gap: 8 }}>
+            <SignInButton>
+              <button className={styles.button}>Sign In</button>
+            </SignInButton>
+            <SignUpButton>
+              <button className={styles.button}>Sign Up</button>
+            </SignUpButton>
+          </div>
+        </SignedOut>
       </main>
-      <footer className={styles.footer}>
-      </footer>
+      <footer className={styles.footer}></footer>
     </div>
   );
 }
