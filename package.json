@@ -30,6 +30,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^16.1.1",
     "prettier": "^3.5.3",
+    "prisma": "^6.9.0",
     "turbo": "^2.5.4",
     "typescript": "5.8.2",
     "typescript-eslint": "^8.34.0"
@@ -43,6 +44,7 @@
     "packages/*"
   ],
   "dependencies": {
-    "@clerk/nextjs": "^6.22.0"
+    "@clerk/nextjs": "^6.22.0",
+    "@prisma/client": "^6.9.0"
   }
 }
