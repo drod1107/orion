@@ -1,28 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import Image, { type ImageProps } from "next/image";
 import styles from "./page.module.css";
-import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs";
 
-type Props = Omit<ImageProps, "src"> & {
-  srcLight: string;
-  srcDark: string;
-};
+// type Props = Omit<ImageProps, "src"> & {
+//   srcLight: string;
+//   srcDark: string;
+// };
 
 const apiUrl = process.env.NEXT_PUBLIC_DEV_API_URL;
 if (!apiUrl) throw new Error("API URL is not set in env vars");
-
-const ThemeImage = (props: Props) => {
-  const { srcLight, srcDark, ...rest } = props;
-
-  return (
-    <>
-      <Image {...rest} src={srcLight} className="imgLight" />
-      <Image {...rest} src={srcDark} className="imgDark" />
-    </>
-  );
-};
 
 export default function Home() {
   const [apiMsg, setApiMsg] = useState("");
@@ -45,15 +33,12 @@ export default function Home() {
   // Button component that triggers fetchApiMessage
   const FetchButton = ({
     className,
-    children
+    children,
   }: {
     className?: string;
     children: React.ReactNode;
   }) => (
-    <button
-      className={className}
-      onClick={fetchApiMessage}
-    >
+    <button className={className} onClick={fetchApiMessage}>
       {children}
     </button>
   );
@@ -69,19 +54,32 @@ export default function Home() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <ThemeImage
-          className={styles.logo}
-          srcLight="turborepo-dark.svg"
-          srcDark="turborepo-light.svg"
-          alt="Turborepo logo"
-          width={180}
-          height={38}
-          priority
-        />
+        {/* Orion theme logo - simple compass/star style */}
+        <svg
+          width="96"
+          height="96"
+          viewBox="0 0 48 48"
+          fill="none"
+          style={{ display: "block", margin: "0 auto" }}
+        >
+          <circle
+            cx="24"
+            cy="24"
+            r="22"
+            stroke="#6366f1"
+            strokeWidth="2"
+            fill="#1e293b"
+          />
+          <polygon
+            points="24,8 29,29 24,40 19,29"
+            fill="#fbbf24"
+            stroke="#fbbf24"
+            strokeWidth="1.5"
+          />
+          <circle cx="24" cy="24" r="3" fill="#6366f1" />
+        </svg>
+
         <SignedIn>
-          <div style={{ marginBottom: 16 }}>
-            <UserButton />
-          </div>
           <FetchButton className={styles.button}>Fetch API Message</FetchButton>
           <ApiResponse />
         </SignedIn>
