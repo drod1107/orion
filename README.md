@@ -15,6 +15,7 @@ To create the *simplest*, *most trustworthy*, and *actually usable* personal fin
 ## 🧪 MVP Goals
 
 The first working version will:
+
 - ✅ Let users securely log in with passkeys & TOTP
 - ✅ Pull in bank transactions via Plaid
 - ✅ Encrypt all financial data client-side before storage
@@ -83,4 +84,3 @@ The first working version will:
 We'll update this once the Turborepo + API + DB config is live.
 
 ---
-
