@@ -2,13 +2,19 @@
 
 **Orion** is a modern, privacy-first budgeting tool designed to restore everything people loved about Mint—and fix everything they hated. It's built for clarity, zero-knowledge security, and local AI-powered financial planning.
 
-> This README documents the current MVP build, focused on getting a working app into the hands of real users fast.
+> “I hate it. It seems to care more about offering me loans and credit cards than actually budgeting.”  
+> — [r/personalfinance](https://www.reddit.com/r/personalfinance/comments/1k3o5s5/whats_a_good_app_that_replaces_the_old_mint_one/), on Mint’s Credit Karma replacement[^1]
+
+---
+
+> “Monarch ... is everything I wanted Mint to be.”  
+> — [r/personalfinance](https://www.reddit.com/r/personalfinance/comments/1k3o5s5/whats_a_good_app_that_replaces_the_old_mint_one/)[^1]
 
 ---
 
 ## **Mission**
 
-To create the *simplest*, *most trustworthy*, and *actually usable* personal finance tool available; one that ex-Mint users will instantly love, and that data privacy nuts will rave over.
+To create the _simplest_, _most trustworthy_, and _actually usable_ personal finance tool available; one that ex-Mint users will instantly love, and that data privacy nuts will rave over.
 
 ---
 
@@ -16,20 +22,20 @@ To create the *simplest*, *most trustworthy*, and *actually usable* personal fin
 
 The first working version will:
 
-- ✅ Let users securely log in with passkeys & TOTP
-- ✅ Pull in bank transactions via Plaid
-- ✅ Encrypt all financial data client-side before storage
-- ✅ Allow setting monthly budgets + category rollovers
-- ✅ Auto-categorize transactions + allow user overrides
-- ✅ Visualize budgets with red/yellow/green progress bars
-- ✅ Support local AI planning: “Can I afford this trip?”
-- ✅ Launch as freemium (with account/category limits)
+- Let users securely log in with passkeys & TOTP
+- Pull in bank transactions via Plaid
+- Encrypt all financial data client-side before storage
+- Allow setting monthly budgets + category rollovers
+- Auto-categorize transactions + allow user overrides
+- Visualize budgets with red/yellow/green progress bars
+- Support local AI planning: “Can I afford this trip?”
+- Launch as freemium (with account/category limits)
 
 ---
 
 ## 🔒 Core Principles
 
-- **Privacy-first**: All sensitive data encrypted *before* it hits our DB
+- **Privacy-first**: All sensitive data encrypted _before_ it hits our DB
 - **Trust by design**: No ads, upsells, or selling data—ever
 - **No BS simplicity**: At-a-glance clarity, no fiddly workflows
 - **Local AI**: Real planning help powered by on-device models
@@ -38,18 +44,18 @@ The first working version will:
 
 ## 🧱 Tech Stack
 
-| Layer            | Tool/Tech                        |
-|------------------|----------------------------------|
-| Frontend         | Next.js (App Router) + Tailwind  |
-| Backend API      | tRPC (Node.js)                   |
-| DB               | PostgreSQL (or MongoDB) + Prisma |
-| Auth             | Clerk (Passkeys + TOTP)          |
-| Bank Sync        | Plaid (fallback: Teller)         |
-| AI Insights      | WebLLM with Llama 3 (or Ollama)  |
-| Charts & Viz     | Recharts + DuckDB                |
-| Billing          | Stripe                           |
-| Testing          | Playwright + Vitest              |
-| Analytics        | PostHog (self-hosted)            |
+| Layer        | Tool/Tech                        |
+| ------------ | -------------------------------- |
+| Frontend     | Next.js (App Router) + Tailwind  |
+| Backend API  | tRPC (Node.js)                   |
+| DB           | PostgreSQL (or MongoDB) + Prisma |
+| Auth         | Clerk (Passkeys + TOTP)          |
+| Bank Sync    | Plaid (fallback: Teller)         |
+| AI Insights  | WebLLM with Llama 3 (or Ollama)  |
+| Charts & Viz | Recharts + DuckDB                |
+| Billing      | Stripe                           |
+| Testing      | Playwright + Vitest              |
+| Analytics    | PostHog (self-hosted)            |
 
 ---
 
@@ -57,7 +63,7 @@ The first working version will:
 
 ### ✅ Phase 1: Security Skeleton
 
-- [ ] MFA Login with Clerk
+- [x] MFA Login with Clerk
 - [ ] Zero-knowledge encryption for transaction data
 - [ ] Bank connection + daily sync pipeline
 
@@ -84,3 +90,5 @@ The first working version will:
 We'll update this once the Turborepo + API + DB config is live.
 
 ---
+
+[^1]: <https://www.reddit.com/r/personalfinance/comments/1k3o5s5/whats_a_good_app_that_replaces_the_old_mint_one/>
