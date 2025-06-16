@@ -5,6 +5,8 @@
 > “I hate it. It seems to care more about offering me loans and credit cards than actually budgeting.”  
 > — [r/personalfinance](https://www.reddit.com/r/personalfinance/comments/1k3o5s5/whats_a_good_app_that_replaces_the_old_mint_one/), on Mint’s Credit Karma replacement[^1]
 
+---
+
 > “Monarch ... is everything I wanted Mint to be.”  
 > — [r/personalfinance](https://www.reddit.com/r/personalfinance/comments/1k3o5s5/whats_a_good_app_that_replaces_the_old_mint_one/)[^1]
 
