@@ -1,0 +1,106 @@
+---
+Documentation/User Guide
+---
+
+# Orion User Guide
+
+Welcome to **Orion**, the reinvention of Mint with privacy at its core. This guide walks you through using Orion to manage your personal finances, from initial setup to taking advantage of advanced features.
+
+## Getting Started: Sign Up and Log In
+
+Orion uses a secure, passwordless login system:
+
+* **Sign Up:** On the home page, click **Sign Up**. You can create an account using our passkey-based system – if your device supports Face ID, Touch ID, or Windows Hello, Orion will prompt you to create a passkey for one-tap login. During signup, you’ll also be able to enable two-factor authentication (TOTP) for extra security (you can scan a QR code with Google Authenticator, etc.).
+
+* **Log In:** If you already have an account, click **Sign In**. If you created a passkey, you can simply use your biometric login. Otherwise, you can use your email/username with the second-factor code if 2FA is enabled. After logging in, you’ll be taken to your **Budget Dashboard**.
+
+*(Tip: Orion supports WebAuthn passkeys on modern browsers – this means no more remembering passwords! And 2FA (Authy, Google Authenticator, etc.) can be turned on in your account settings for added protection.)*
+
+## Connecting Your Bank Accounts
+
+Orion connects to your bank and credit card accounts to automatically import transactions:
+
+* Navigate to **Add Account** (from the dashboard or accounts menu). Click **Connect Bank**. This will launch a secure Plaid connection flow.
+* In the **Plaid** window, choose your bank or credit card provider and follow the prompts to log in. (Orion **never** sees your credentials – they’re handled by Plaid securely.)
+* Once connected, Orion will initially pull the last few months of transactions. This may take a minute. You’ll see a success message when your account is linked. You can repeat this to add multiple accounts (up to the limit on free plans).
+* After linking, Orion will auto-update your transactions daily (you don’t need to manually refresh). If a bank requires re-auth (for example, multi-factor prompts), Orion will notify you with instructions.
+
+*(Note: In this beta, we support most major banks via Plaid. If your bank isn’t listed or you prefer not to connect, you can import transactions via CSV in a future update.)*
+
+## Setting Up Your Budget Categories
+
+Before you can fully utilize the budgeting dashboard, set up some budget categories:
+
+* Go to **Budgets** (accessible from the dashboard or sidebar). By default, we’ve created a few example categories (e.g., *Food*, *Rent*, *Entertainment*). You can edit or delete these.
+* **Add a New Category:** Click **Add Budget Category**, give it a name (e.g., *Groceries* or *Utilities*), and set a monthly budget amount (how much you plan to spend in that category each month).
+* **Monthly Limits and Rollovers:** Orion allows unused budget to roll over. For example, if you budget \$200 for groceries and only spend \$150, the remaining \$50 can carry into next month (if you enable rollover for that category). When creating or editing a category, toggle **Rollover** on if you want this behavior.
+* Once your categories are set up with their monthly limits, they will appear on your Budget Dashboard with progress bars showing spending vs. budget.
+
+*(You can adjust budgets anytime. Changes mid-month will retroactively apply to that month’s limit.)*
+
+## Managing Transactions (Inbox & Categorization)
+
+Keeping transactions categorized is key to accurate budgets. Orion helps by auto-categorizing incoming transactions:
+
+* **Transaction Inbox:** Navigate to **Transactions** (or **Inbox**). New transactions that we import will appear here, tagged with a **Suggested Category**. If the system is confident (for example, it recognized “Starbucks” as *Coffee Shops* category), it will categorize it. Otherwise, it might mark it as *Uncategorized*.
+* **Reviewing Transactions:** In the inbox view, you’ll see recent transactions with their date, description, amount, and category. Review each:
+
+  * If a transaction’s category is correct, you can mark it as reviewed (or simply leave it – by default it’s counted in that category’s budget).
+  * If it’s wrong or *Uncategorized*, click the category field to change it. A dropdown of your categories will appear (with autocomplete).
+* **Set & Forget Rules:** When you change a category, Orion will ask if you want to apply this to similar transactions in the future. For example, if you recategorize “Starbucks” from *Uncategorized* to *Food: Coffee*, you can check “Always categorize ‘Starbucks’ as this in the future.” Orion will then remember that rule and auto-apply it for future imports.
+* **Batch Actions:** You can filter or select multiple transactions (e.g., all transactions from *Uber*) and change their category in one go. Use the search or filter function in the Transactions page, select all, then choose **Recategorize**.
+* Over time, your involvement should decrease as Orion learns your habits. The Inbox is there whenever new uncategorized entries come in, but if Orion’s guess is right, you might just glance and move on.
+
+*(Pro tip: Use the search bar in Transactions to quickly find any transaction across all accounts. Note that search works locally on decrypted data, since Orion never uploads your transaction details in plain text to the cloud.)*
+
+## Using the Budget Dashboard
+
+Once accounts and budgets are in place, the **Dashboard** becomes your financial command center:
+
+* Open the **Dashboard** (home page after login). You’ll see a list of your budget categories with a colored progress bar for each:
+
+  * **Green bar** means you’re on track (spent well below the budget so far this month).
+  * **Yellow bar** means caution (approaching the budget limit).
+  * **Red bar** means you’ve exceeded the budget (or are very close to doing so).
+* Each category line shows the budgeted amount, how much you’ve spent so far this month, and how much remains (or how much over-budget you are, if red).
+* If a category has rollover enabled, an info icon will show any carried over amount from last month.
+* At the top of the dashboard, you might see an aggregate summary (e.g., total monthly budget vs. spent) and perhaps alerts (like “3 transactions need categorization” or “You’re over budget in 1 category”).
+
+Use this dashboard to quickly gauge your finances. If something’s red or looks off, drill into Transactions or adjust your budgets accordingly.
+
+## AI Planning Assistant
+
+One of Orion’s unique features is the built-in AI financial assistant, which works entirely on your device:
+
+* To access the assistant, go to the **AI Assistant** section (from the nav menu) or click the chat icon in the app (UI to be defined in the final product).
+* You’ll see a prompt area where you can **ask questions in plain English** about your finances. Examples:
+
+  * *“Can I afford a \$2,000 vacation this December?”* – The AI will consider your savings, upcoming budgets, and typical spending to give guidance.
+  * *“How much do I spend on groceries on average?”* – It can compute and explain your average monthly grocery spend based on past data.
+  * *“What’s my biggest spending category this month?”* – It will identify and summarize where your money is going.
+* The AI will respond with helpful, concise answers, sometimes with simple charts or references to your data (e.g., “Your biggest category is **Rent**, which is 40% of your spend.”).
+* Because the AI runs locally (using a small, efficient model in the browser), your financial data never leaves your device for these answers . It might take a few seconds to generate an answer, especially for complex questions, but the trade-off is total privacy.
+
+*(Note: The AI assistant is in beta. It may occasionally give incorrect answers. Always double-check critical decisions. No AI can perfectly predict your finances, but it should provide a helpful starting point for planning.)*
+
+## Free vs. Premium Accounts
+
+Orion is free to use with some limits, and offers a premium upgrade for power users:
+
+* **Free Tier:** You can link up to X bank accounts (e.g., 2 accounts) and create up to Y budget categories (e.g., 10 categories) on the free plan. All core features (bank sync, budgeting, AI, etc.) are available in the free tier with these limits. We do *not* show ads or sell your data, even on the free plan – your privacy is guaranteed.
+* **Premium Tier:** By subscribing to Orion Premium, you get to link unlimited accounts, create unlimited categories, and unlock advanced features as they roll out (for example, deeper analytical reports or priority support). Premium is how we sustain the product instead of ads. It’s a simple monthly fee (and remember, *your data stays safe*).
+* **Upgrading:** If you hit a free tier limit or want the extra features, head to **Settings** > **Upgrade**. Orion uses Stripe for secure payments. Once premium, the app will instantly lift those limits.
+* **Import/Export:** Both free and premium users can always export their data (transactions, budgets) to CSV for backup or personal use. We believe in data portability.
+
+*(During the beta, all features are free with relaxed limits. We’ll notify users when the freemium model fully kicks in, and no surprise paywalls will be introduced without clear communication.)*
+
+## Privacy & Security Notes
+
+Your data security is our top priority:
+
+* **Encryption:** All your sensitive data is encrypted locally *before* being stored in our database. This means even if someone breached our servers, they **cannot read your transactions or budgets** without your encryption key. Orion’s “zero-knowledge” design means we, the developers, can’t peek at your data even if we wanted to.
+* **Authentication Security:** Orion leverages Clerk for authentication, meaning we support modern secure login methods. Passkeys allow you to log in with biometrics securely, and two-factor auth (TOTP) adds another layer so only you can access your account. We strongly encourage enabling 2FA during setup for maximum security.
+* **No Ads or Data Selling:** Orion is funded by premium subscriptions, *not* by selling user data. Unlike some free apps, we absolutely do not share or sell your financial data to third parties. (We do collect basic usage metrics via PostHog to improve the app, but this is anonymized and self-hosted.)
+* **Open Communication:** Check the **Release Notes** for updates on new features and fixes. If you encounter any issues or have concerns about your data, reach out to our support anytime.
+
+We hope Orion helps you take control of your finances without sacrificing privacy or usability. Happy budgeting!

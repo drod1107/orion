@@ -1,0 +1,101 @@
+---
+Documentation/Developer Setup
+---
+
+# Developer Setup & Installation
+
+This guide explains how to get the Orion app running locally for development.
+
+## Prerequisites
+
+* **Node.js 18+** and npm (Orion uses npm workspaces via Turborepo).
+* **PostgreSQL** database (for development, you can use a local Postgres instance or Docker container).
+* **Clerk API Keys** for authentication (you’ll need a Clerk publishable key and secret key).
+* **Plaid API Keys** (optional for development of bank sync; in dev you can use Plaid’s sandbox keys).
+* (Optional) **Stripe API Keys** if testing premium subscription flow locally.
+
+## Local Installation Steps
+
+1. **Clone the Repository:**
+
+   ```bash
+   git clone https://github.com/your-org/orion.git
+   ```
+
+   *(Use the actual repo URL and appropriate credentials if it’s private.)*
+
+2. **Install Dependencies:**
+
+   ```bash
+   cd orion
+   npm install
+   ```
+
+   This uses Turborepo to install all workspace dependencies (for the Next.js app, Express API, UI library, etc.).
+
+3. **Configure Environment Variables:**
+
+   * Copy the sample files to actual env files:
+
+     * `cp .env.sample .env` (root env for database URL)
+     * `cp apps/web/.sample.env.local apps/web/.env.local` (frontend env)
+   * Open the new `.env` (in the project root) and set your database connection string:
+
+     ```env
+     DATABASE_URL="postgresql://&lt;username&gt;:&lt;password&gt;@&lt;host&gt;:&lt;port&gt;/&lt;dbname&gt;"
+     ```
+   * Open `apps/web/.env.local` and fill in the required keys:
+
+     ```env
+     NEXT_PUBLIC_DEV_API_URL=http://localhost:4000
+     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=&lt;your Clerk publishable key&gt;
+     CLERK_SECRET_KEY=&lt;your Clerk secret key&gt;
+     ```
+
+     Use your own Clerk keys (from your Clerk dashboard) or ask the team lead for dev keys. The `NEXT_PUBLIC_DEV_API_URL` should point to your local API server (default is port 4000).
+   * *(Optional)* Also in `apps/web/.env.local`, if you plan to test Plaid integration, add Plaid sandbox client ID/secret, and any other API keys when those integrations are in place.
+
+4. **Set Up the Database:**
+
+   Make sure your Postgres server is running. Then initialize the database with the Prisma schema:
+
+   ```bash
+   npx prisma migrate dev --name init
+   ```
+
+   This will create the dev database (defined by `DATABASE_URL`) and generate the initial schema (currently just a `User` table).
+   *Note:* If you update `prisma/schema.prisma` later, run `npx prisma migrate dev` again to apply changes (or `prisma db push` for a quick sync in dev).
+
+5. **Run the App in Development Mode:**
+
+   In the project root, start the development servers:
+
+   ```bash
+   npm run dev
+   ```
+
+   This uses Turborepo to run both the frontend and backend concurrently. You should see:
+
+   * Next.js app (frontend) running on **[http://localhost:3000](http://localhost:3000)**
+   * Express API (backend) running on **[http://localhost:4000](http://localhost:4000)**
+     By default, the web app will proxy API requests to `localhost:4000` (as set in the env). You can now open the web app and exercise features. For example, create an account via the Clerk sign-up (this will open the Clerk UI), or sign in if you already have an account.
+
+6. **Verify Setup:**
+
+   * Visit the web app in your browser at [http://localhost:3000](http://localhost:3000). You should see the Orion home page. If you log in (or use the test Sign In), you can click the “Fetch API Message” button to test the API.
+   * The terminal running the API server should log `Orion API is running on port 4000`, and the web terminal will show Next.js ready on port 3000. If you see any errors, double-check env variables and that the database is accessible.
+
+7. **Running Storybook (Docs Site):**
+
+   *(If Storybook is configured as a separate app)* Run the docs/storybook application with:
+
+   ```bash
+   cd apps/docs
+   npm run dev
+   ```
+
+   Then open [http://localhost:6006](http://localhost:6006) to view the component library and documentation. (Depending on configuration, the port may vary.) Storybook will show our documentation pages (like this guide) and any UI component stories.
+
+8. **Running Tests:**
+
+   See the **Contributor Guide** and **Build Process** docs for detailed testing instructions. In short, use `npm run test` to execute unit tests (Vitest) and see below for how to run end-to-end tests (Playwright).

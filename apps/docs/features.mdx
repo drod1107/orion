@@ -1,0 +1,86 @@
+---
+Documentation/Features & UX
+---
+
+# Orion Features & UX Decisions
+
+A living document tracking all major features, their purpose, and user pain points they address.
+
+---
+
+## Budget Dashboard
+
+* **What:**
+  Mint-style budget dashboard with color-coded progress bars, category summaries, and at-a-glance clarity.
+* **Why:**
+  Users hate extra clicks and cryptic charts (see Reddit feedback). “I want to know if I’m over budget instantly.”
+* **Core UX:**
+
+  * Each category: name, budget, spent, amount left/over, progress bar (green/yellow/red).
+  * Rollovers and history are prominent, not hidden.
+
+---
+
+## Bank Connection
+
+* **What:**
+  Secure Plaid-based sync for bank accounts and credit cards.
+* **Why:**
+  “If I have to manually import CSVs, I won’t use it.” Real-time, automated sync is non-negotiable.
+* **Core UX:**
+
+  * User taps “Connect Bank,” completes Plaid flow, data is pulled & categorized.
+
+---
+
+## Transaction Inbox & Categorization
+
+* **What:**
+  Automatic (with override) category rules for transactions, with fast editing and a “set it and forget it” philosophy.
+* **Why:**
+  Manual categorization = churn. Users want it done for them, but want to correct errors *once*.
+* **Core UX:**
+
+  * New transactions land in an “Inbox” for review. Autocategorization is applied, but the user can quickly reassign and choose “Apply to all similar transactions” to set a persistent rule.
+  * Autocomplete for category fields and persistent custom rules for vendors. Batch actions allow “recategorize all past transactions from Vendor X to category Y.”
+
+---
+
+## AI Assistant
+
+* **What:**
+  Local AI that answers natural-language questions like “Can I afford this?” and gives plain-English spending summaries.
+* **Why:**
+  Users are overwhelmed by raw data and charts — they want guidance, not just analytics.
+* **Core UX:**
+
+  * User types a question (“Can I spend \$500 on travel this month?”) and the AI provides a helpful answer based on their budget and spending history.
+  * The assistant can highlight trends (e.g. “Your dining spend is 20% above average this month”) in simple terms.
+
+---
+
+## Secure Authentication (Passkeys & MFA)
+
+* **What:**
+  Passwordless sign-in with device Passkeys (biometric login) plus optional TOTP-based 2-factor authentication for added security.
+* **Why:**
+  With so much financial data in one place, users demand strong account protection. Mint infamously lacked 2FA and lost user trust — e.g. *“I won’t use Mint until it has 2FA… when Facebook has stronger security than your finance tracking software, you know you’re in trouble.”*
+* **Core UX:**
+
+  * One-tap login via Face ID/Touch ID or device PIN (using WebAuthn passkeys) eliminates the need for passwords entirely.
+  * Users can secure sensitive actions or new device logins with an Authenticator app (TOTP code) as a second factor. Setting up 2FA is straightforward during onboarding (with QR code for Google Authenticator, etc.).
+  * The app uses Clerk to handle Passkey and TOTP flows, so the user gets a smooth, familiar authentication experience.
+
+---
+
+## Zero-Knowledge Data Encryption
+
+* **What:**
+  All personal financial data is encrypted client-side *before* it ever reaches Orion’s database. The encryption keys stay with the user (in the browser/app), meaning even Orion’s servers and staff cannot read sensitive financial information in plaintext.
+* **Why:**
+  Privacy is paramount. Many users are wary of “free” finance tools selling or mining their data. In fact, some would rather pay for privacy: *“Mint selling my data is a huge price to pay… I’d prefer to pay a monthly fee knowing that my data is safe.”* By employing true end-to-end encryption, Orion builds trust — user data remains private, and there’s no incentive (or ability) for us to monetize it improperly.
+* **Core UX:**
+
+  * From the user’s perspective, encryption is invisible and hassle-free. During account setup, encryption keys are generated behind the scenes (e.g. derived from a passphrase or stored securely via the passkey mechanism), so the user doesn’t have to manage keys manually.
+  * All sensitive fields (transactions, account balances, budgets, etc.) are encrypted locally. Even if our databases were compromised, attackers would find only gibberish. Only the logged-in user’s device can decrypt the data.
+  * **Trade-off:** Because of this design, some features like server-side search or support troubleshooting require different approaches (e.g. searching must happen client-side, and user support can never see actual financial data — a conscious decision in favor of privacy).
