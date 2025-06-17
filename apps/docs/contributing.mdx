@@ -1,0 +1,31 @@
+---
+Documentation/Contributing
+---
+
+# Contributing to Orion
+
+Thank you for contributing to Orion! This guide outlines the best practices and our development workflow to help maintain code quality and project consistency.
+
+* **Code Style & Linting:** Orion uses **ESLint** (with the Airbnb/Next.js style guides) and **Prettier** for consistent code formatting. We’ve set up **Husky** and **lint-staged**, so on each commit, code is automatically linted and formatted. Please fix any lint errors and ensure `npm run lint` passes before pushing changes.
+
+* **Git Workflow:** We use a feature-branch model. Create a descriptively named branch for your work (e.g., `feature/budget-rollover` or `fix/login-bug`). Commit your changes in logical chunks with clear messages. When ready, open a Pull Request to the `main` branch. At least one other team member should review your PR. Once approved and checks pass, it can be merged. (Our CI will run tests and linting on each PR automatically.)
+
+* **Testing Requirements:** All new features or bug fixes should include **unit tests** and/or **integration tests** as appropriate. We use **Vitest** for unit tests (within the monorepo apps/packages) and **Playwright** for end-to-end tests. Aim for meaningful coverage, especially for critical logic:
+
+  * Write React component tests for any new UI components (e.g., using @testing-library/react with Vitest) and API route tests for server logic. Place these alongside the code (e.g., `ComponentName.test.tsx`) or in a `__tests__` folder within the same package.
+  * If your change is user-facing, consider adding or updating a Playwright E2E test scenario. E2E tests reside in the `apps/e2e` project.
+  * Ensure `npm run test` (which runs all Vitest tests) passes, and run `npx playwright test` for E2E tests if you affected functionality.
+
+* **Documentation:** For any new feature, update the relevant documentation in `apps/docs`. This includes the **Features & UX** doc (if it’s a major user feature), the **User Guide**, and possibly the **Developer Setup** or **Build Process** docs if configuration or process changes. We are using **Storybook** to host our docs, so you can write content in Markdown/MDX and it will appear in the docs site. Keeping documentation up-to-date is as important as the code.
+
+* **Branching & Releases:** We tag releases in Git and update the **Release Notes** doc. If your contribution completes a user-facing milestone or fixes a notable bug, add an entry to `release-notes.md` (under “Unreleased” if we haven’t cut a version yet). This helps us prepare clear release changelogs.
+
+* **Security & Secrets:** Do **not** commit real secrets (API keys, passwords) in the code or config. Use environment variables as we’ve done. When writing code, be mindful of our privacy-first design: avoid logging sensitive data and follow zero-knowledge principles (e.g., never send unencrypted sensitive info to the server). All third-party libraries should be vetted for security. If you introduce a new dependency, mention it in the PR for review.
+
+* **Design & UX Consistency:** If contributing UI changes, follow our established patterns. We have a growing internal UI library (`packages/ui`). When possible, add new components there so they can be reused. We even have a generator setup (Plop via Turborepo) to scaffold new components consistently. Also, use Storybook to develop and visually test components in isolation. Add or update a Storybook story (`.stories.mdx` or `.stories.tsx`) for any new UI component or variant.
+
+* **Continuous Integration:** GitHub Actions will run our test suite and linting on every PR and push to main. Make sure your changes pass all checks. A typical CI workflow will lint the code, run Vitest tests, build the apps, and possibly run Playwright tests on a deployed test instance. Keep an eye on the CI results and fix any issues before requesting review.
+
+* **Communications:** Feel free to open an issue for discussion or design before writing code if the feature is large. We track features and tasks in GitHub Issues for this repo – check there to avoid duplicating work. Use descriptive titles and link related issues/PRs together.
+
+Following these guidelines ensures that Orion remains stable, secure, and easy to maintain.  Happy coding!

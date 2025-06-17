@@ -1,0 +1,87 @@
+---
+Documentation/Build & CI Process
+---
+
+# Build, Architecture & CI Process
+
+Orion is structured as a **Turborepo monorepo**, which means we have multiple
+apps and packages managed in one repository with coordinated builds. This
+document overviews how everything is organized and how our continuous
+integration/deployment works.
+
+## Monorepo Structure
+
+* **Apps:** The `apps/` directory contains our runnable applications:
+
+  * `apps/web`: The Next.js frontend (React + Tailwind UI). This is the user-facing web app.
+  * `apps/api`: The Node.js backend (Express + tRPC in the future). This serves API requests (bank sync, etc.) and will contain our business logic.
+  * `apps/docs`: The Storybook instance for documentation and component previews. It houses all our Markdown/MDX docs (like this one) and any story files for UI components.
+  * *(Potentially `apps/e2e`: our end-to-end tests project – see testing below.)*
+* **Packages:** The `packages/` directory holds shared code:
+
+  * `packages/ui`: A growing internal UI component library (React components that can be used in `apps/web` and also documented in Storybook). This ensures design consistency across the app.
+  * You can add more shared packages (e.g., for utilities, types, etc.) as needed. We use the workspace feature so packages can import each other.
+
+All apps and packages are TypeScript projects. We use workspace versioning, so packages can refer to each other via `package.json` with "workspace:\*" (handled by npm workspaces).
+
+## Build and Development Scripts
+
+* **Development:** Use `npm run dev` at the repo root. Turborepo will run all necessary dev servers in parallel. By default:
+
+  * The Next.js app (`apps/web`) starts on localhost:3000.
+  * The Express API (`apps/api`) starts on localhost:4000 (see `apps/api/index.ts`).
+  * Storybook (`apps/docs`) can be started separately with its own script (e.g., `npm run dev` inside `apps/docs`) if you're working on docs or UI components in isolation.
+* **Build:** Use `npm run build` to produce production builds of all apps:
+
+  * Next.js will create an optimized build (in `.next` folder) ready for deployment.
+  * The API will be compiled (we may use tsc to output a JavaScript bundle in the future, or simply run it via Node in production since it's a lightweight server).
+  * Storybook docs can also be built via `npm run build` in `apps/docs` (generating static files for the docs site if we choose to deploy it).
+* **Lint & Type Check:** `npm run lint` will invoke ESLint on all apps/packages, and `npm run check-types` will run `tsc --noEmit` across the codebase. These help catch issues early.
+
+Under the hood, our **Turborepo** configuration ensures that commands like build, lint, and test are run in the right order and only on affected packages (for efficiency). For example, if you only changed a UI component, `npm run build` will skip rebuilding the API if nothing there changed.
+
+## Automated Testing
+
+We have two testing layers:
+
+* **Unit and Integration Tests:** Using **Vitest**. Test files live alongside code (named `.test.ts`/`.test.tsx`) or in a `__tests__` folder within each app/package. You can run all unit tests with `npm run test` (to be set up to run `turbo run test` which calls vitest in each project). These tests are fast and run in memory (with JSDOM for React components or directly in Node for server code).
+* **End-to-End Tests:** Using **Playwright**. These tests simulate a user using the app in a headless browser. They are located in `apps/e2e` (each test file ends in `.spec.ts`). Playwright will launch the web app and API (either you start them manually or the test runner can launch a dev server) and then run through scenarios (e.g., log in, add an account, see it appear in UI).
+
+  * To run E2E tests locally: first start the dev servers (`npm run dev` for web/api), then in another terminal run `npx playwright test` (or the equivalent npm script). Playwright will open an automated browser and run through the test scripts.
+* We have a basic smoke test in place as a starting point. As features grow, we'll add more comprehensive E2E tests.
+
+**Test Environment:** The test configuration uses a separate database (you can set a different `DATABASE_URL` in a test env file if needed to avoid clobbering dev data). The API server is being structured so that it can be imported into tests without starting the HTTP listener (e.g., we export the Express `app` object) – this allows using Supertest to directly call API endpoints in unit tests.
+
+## Continuous Integration (CI) & Deployment
+
+Our project is hooked into **GitHub Actions** for CI:
+
+* On each push and Pull Request, the CI pipeline will run:
+
+  1. **Install** dependencies (using cache to speed up).
+  2. **Lint & Type-check**: Ensures code style and types are correct.
+  3. **Unit Tests** (Vitest): Runs the test suite, outputting results.
+  4. **Build**: Builds the web and API apps to catch any production build issues.
+  5. **End-to-End Tests** (Playwright): *(Planned)* For E2E, we may spin up the app (perhaps using a test database and some seeded data) and run Playwright against it in CI. This step might run on certain branches or nightly due to time—depending on performance.
+* All checks must pass before a PR can be merged, protecting the `main` branch from broken code.
+
+For **deployment**, we are considering a few options (to be finalized):
+
+* **Frontend (Next.js)**: Likely deployed on Vercel for ease of use, or a container via our own infrastructure. Next.js supports static generation and serverless functions; however, since we have a separate API, our Next app might be mostly static+client-side.
+* **Backend (API)**: Could be deployed on a service like Heroku, Fly.io, or a Docker container on AWS/DigitalOcean. We’ll containerize the Express API (with Node 18 base image) for consistency. Environmental configs (DATABASE\_URL, Clerk and Plaid keys, etc.) will be set in the deployment environment.
+* **Storybook Docs**: We can publish the Storybook documentation as a static site (using `npm run build` in `apps/docs` to generate static files). This could be hosted via GitHub Pages or Vercel as well, enabling the team (and eventually users) to browse release notes, guides, and component library without running code.
+
+Our CI can be configured to deploy automatically:
+
+* e.g., On push to `main` after tests pass, trigger a deployment job (to Vercel or to our server). We will ensure database migrations run as part of the deployment process (using Prisma migrations).
+* Monitoring/Analytics: The app includes PostHog for analytics; in production we’ll point it to our self-hosted PostHog instance. We also will set up basic monitoring for the API (uptime, error tracking via something like Sentry in the future).
+
+## Summary of Developer Workflow
+
+* Work on a feature branch -> Write code + tests -> Run `npm run lint && npm run test` locally to verify -> Open PR.
+* CI runs and verifies -> Code review -> Merge to main.
+* Main branch updates trigger deployment to the staging/production environment.
+* Storybook documentation is updated alongside features, so the docs site always reflects the current state of main.
+* **Keep documentation and tests in mind from the start** – this ensures smoother releases and fewer bugs down the line.
+
+By following this process and structure, we maintain a robust development cycle where issues are caught early and deployments are low-risk. As the project grows, this document will be updated with any changes to our build or release strategy.
