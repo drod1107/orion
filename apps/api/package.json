@@ -8,7 +8,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npx vitest run"
   },
   "dependencies": {
     "cors": "^2.8.5",

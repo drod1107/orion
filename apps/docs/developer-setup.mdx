@@ -1,5 +1,5 @@
 ---
-Documentation/Developer Setup
+## Documentation/Developer Setup
 ---
 
 # Developer Setup & Installation
@@ -42,14 +42,14 @@ This guide explains how to get the Orion app running locally for development.
    * Open the new `.env` (in the project root) and set your database connection string:
 
      ```env
-     DATABASE_URL="postgresql://&lt;username&gt;:&lt;password&gt;@&lt;host&gt;:&lt;port&gt;/&lt;dbname&gt;"
+     DATABASE_URL="postgresql://<username>:<password>@<host>:<port>/<dbname>"
      ```
    * Open `apps/web/.env.local` and fill in the required keys:
 
      ```env
      NEXT_PUBLIC_DEV_API_URL=http://localhost:4000
-     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=&lt;your Clerk publishable key&gt;
-     CLERK_SECRET_KEY=&lt;your Clerk secret key&gt;
+     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=<your Clerk publishable key>
+     CLERK_SECRET_KEY=<your Clerk secret key>
      ```
 
      Use your own Clerk keys (from your Clerk dashboard) or ask the team lead for dev keys. The `NEXT_PUBLIC_DEV_API_URL` should point to your local API server (default is port 4000).
