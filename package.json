@@ -12,25 +12,34 @@
   },
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev",
+    "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test": "turbo run test",
+    "test:unit": "turbo run test --filter=api",
+    "test:e2e": "npx playwright test --config=apps/e2e/playwright.config.ts",
+    "test:all": "npm run test:unit && npm run test:e2e"
   },
   "devDependencies": {
     "@eslint/css": "^0.9.0",
     "@eslint/js": "^9.29.0",
     "@eslint/json": "^0.12.0",
     "@eslint/markdown": "^6.5.0",
+    "@playwright/test": "^1.53.1",
     "@types/cors": "^2.8.19",
+    "@types/supertest": "^6.0.3",
     "eslint": "^9.29.0",
     "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-storybook": "^9.0.12",
     "globals": "^16.2.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.1",
+    "playwright": "^1.53.1",
     "prettier": "^3.5.3",
     "prisma": "^6.9.0",
+    "supertest": "^7.1.1",
     "turbo": "^2.5.4",
     "typescript": "5.8.2",
     "typescript-eslint": "^8.34.0"
@@ -40,8 +49,8 @@
   },
   "packageManager": "npm@11.4.1",
   "workspaces": [
-    "apps/*",
-    "packages/*"
+    "apps/api",
+    "apps/web"
   ],
   "dependencies": {
     "@clerk/nextjs": "^6.22.0",

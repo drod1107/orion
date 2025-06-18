@@ -10,7 +10,8 @@
     "lint": "next lint --max-warnings 0",
     "check-types": "tsc --noEmit",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "test": "echo 'No tests yet for web'"
   },
   "dependencies": {
     "@repo/ui": "*",

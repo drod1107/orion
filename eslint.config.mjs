@@ -17,10 +17,10 @@ export default defineConfig([
   // Global browser & node
   { files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"], languageOptions: { globals: { ...globals.browser, ...globals.node } } },
 
-  // TypeScript recommended
-  tseslint.configs.recommended,
+  // TypeScript recommended (spread if it's an array)
+  ...tseslint.configs.recommended,
 
-  // React recommended (flat config)
+  // React recommended (single object, not spread)
   pluginReact.configs.flat.recommended,
 
   // JSON
@@ -34,14 +34,18 @@ export default defineConfig([
   // CSS
   { files: ["**/*.css"], plugins: { css }, language: "css/css", extends: ["css/recommended"] },
 
-  // STORYBOOK: Lint all Storybook stories and MDX files
+  // STORYBOOK: Specific files configuration
   {
     files: [
       "**/*.stories.@(js|jsx|ts|tsx|mdx)",
       "**/*.story.@(js|jsx|ts|tsx|mdx)"
     ],
-    plugins: { storybook },
-    extends: ["plugin:storybook/recommended"],
+    plugins: { 
+      storybook 
+    },
+    rules: {
+      ...storybook.configs.recommended.rules
+    }
   },
 
   // General React rule overrides
