@@ -1,5 +1,5 @@
 ---
-Documentation/Release Notes
+## Documentation/Release Notes
 ---
 
 # Release Notes
@@ -15,5 +15,13 @@ Documentation/Release Notes
 * **AI Assistant:** Included a local AI feature that answers questions like “Can I afford X?” using the user’s data (runs in-browser for privacy).
 * **Freemium Model:** Launching with a free tier (limited number of linked accounts and budget categories) and a premium tier (unlimited accounts/categories and future premium features) for sustainable monetization.
 * **Miscellaneous:** Set up analytics with PostHog (self-hosted) for user interaction insights, and integrated Stripe for handling premium subscription payments (will activate once premium features launch).
+
+### \[Unreleased]
+
+#### Added
+
+PR: (Orion 12)[https://github.com/drod1107/orion/pull/12]
+* **Automated Testing:** Full automated test suite for backend API (Vitest + Supertest) and Playwright-based E2E tests for unauthenticated user flows. Refactored API server for testability. Docs updated with new testing instructions.
+* **ESLint v9 Flat Config:** Project now uses ESLint 9+ with full flat config, including inlined Storybook rules for Storybook story linting. Storybook MDX/JS/TS/TSX stories are now linted automatically as part of CI and local development.
 
 *(Further details and any bug fixes will be documented here as development continues. Future releases will be appended in descending order.)*
