@@ -1,21 +1,142 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
+// /prisma/schema.prisma
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "postgresql" // or "sqlite", "mysql", etc.
   url      = env("DATABASE_URL")
 }
 
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
+  firstName String?
+  lastName  String?
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  accounts     BankAccount[]
+  transactions Transaction[]
+  budgets      BudgetCategory[]
+  queries      AssistantQuery[]
+  notifications Notification[]
+
+  @@map("users")
+}
+
+model BankAccount {
+  id              String    @id @default(cuid())
+  name            String
+  type            AccountType
+  balance         Float
+  lastSynced      DateTime?
+  isActive        Boolean   @default(true)
+  institutionName String?
+  plaidAccountId  String?   @unique
+  
+  userId       String
+  user         User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("bank_accounts")
+}
+
+model BudgetCategory {
+  id     String @id @default(cuid())
+  name   String
+  budget Float
+  spent  Float  @default(0)
+  
+  userId String
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, name])
+  @@map("budget_categories")
+}
+
+model TransactionCategory {
+  id    String @id @default(cuid())
+  name  String @unique
+  color String?
+  icon  String?
+  
+  transactions Transaction[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("transaction_categories")
+}
+
+model Transaction {
+  id          String   @id @default(cuid())
+  description String
+  amount      Float
+  date        DateTime
+  
+  userId    String
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  accountId String?
+  account   BankAccount? @relation(fields: [accountId], references: [id], onDelete: SetNull)
+  
+  budgetCategoryId String?
+  budgetCategory   BudgetCategory? @relation(fields: [budgetCategoryId], references: [id], onDelete: SetNull)
+  
+  transactionCategoryId String?
+  transactionCategory   TransactionCategory? @relation(fields: [transactionCategoryId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("transactions")
+}
+
+model AssistantQuery {
+  id        String   @id @default(cuid())
+  query     String
+  response  String
+  timestamp DateTime @default(now())
+  
+  userId String
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("assistant_queries")
+}
+
+model Notification {
+  id      String           @id @default(cuid())
+  title   String
+  message String
+  type    NotificationType
+  read    Boolean          @default(false)
+  
+  userId String
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("notifications")
+}
+
+enum AccountType {
+  CHECKING
+  SAVINGS
+  CREDIT
+}
+
+enum NotificationType {
+  INFO
+  SUCCESS
+  WARNING
+  ERROR
 }
