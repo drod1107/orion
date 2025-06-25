@@ -1,56 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import styles from "./page.module.css";
 import { SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs";
-
-// type Props = Omit<ImageProps, "src"> & {
-//   srcLight: string;
-//   srcDark: string;
-// };
-
-const apiUrl = process.env.NEXT_PUBLIC_DEV_API_URL;
-if (!apiUrl) throw new Error("API URL is not set in env vars");
+import { Dashboard } from "./components/Dashboard"; // <-- Adjust path as needed
 
 export default function Home() {
-  const [apiMsg, setApiMsg] = useState("");
-
-  // Fetch API message and store in state
-  const fetchApiMessage = async () => {
-    try {
-      const response = await fetch(`${apiUrl}/`);
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const data = await response.json();
-      setApiMsg(data.message);
-    } catch (error) {
-      console.error("Error fetching API message:", error);
-      setApiMsg("Failed to fetch API message.");
-    }
-  };
-
-  // Button component that triggers fetchApiMessage
-  const FetchButton = ({
-    className,
-    children,
-  }: {
-    className?: string;
-    children: React.ReactNode;
-  }) => (
-    <button className={className} onClick={fetchApiMessage}>
-      {children}
-    </button>
-  );
-
-  // Component to display API response
-  const ApiResponse = () => (
-    <div>
-      <h2>API Response:</h2>
-      <p>{apiMsg}</p>
-    </div>
-  );
-
   return (
     <div className={styles.page}>
       <main className={styles.main}>
@@ -80,8 +34,7 @@ export default function Home() {
         </svg>
 
         <SignedIn>
-          <FetchButton className={styles.button}>Fetch API Message</FetchButton>
-          <ApiResponse />
+          <Dashboard />
         </SignedIn>
         <SignedOut>
           <div style={{ display: "flex", gap: 8 }}>

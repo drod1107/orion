@@ -2,13 +2,8 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
-import {
-  SignInButton,
-  SignUpButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from "@clerk/nextjs";
+import { Navbar } from "./components/ui/Navbar";
+import { ToastProvider } from "./components/ui/Toast";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -33,17 +28,8 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body className={`${geistSans.variable} ${geistMono.variable}`}>
-          <header>
-            <SignedOut>
-              <SignInButton />
-              <SignUpButton />
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-          </header>
-
-          {children}
+          <Navbar />
+          <ToastProvider>{children}</ToastProvider>
         </body>
       </html>
     </ClerkProvider>

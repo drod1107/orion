@@ -1,3 +1,5 @@
+"use client";
+
 // /components/ui/Toast.tsx
 import * as ToastPrimitive from "@radix-ui/react-toast";
 import { createContext, useContext, useState } from "react";
